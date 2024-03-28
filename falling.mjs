@@ -2,6 +2,10 @@ import { entities } from "./screen.mjs";
 
 const PARTICLE_CHAR = "██";
 const BLANK = "▒▒";
+const DIRECTIONS = {
+  left: "L",
+  right: "R",
+};
 
 function spawnParticle() {
   const particle = {
@@ -31,53 +35,28 @@ function isParticle({ x, y }) {
 }
 
 function slideParticle({ x, y }) {
-  function fall(particle, groundPosition, direction) {
-    const distance = particle.y - groundPosition.y;
-    const mapper = {
-      L: particle.x - 1,
-      R: particle.x + 1,
-    };
-
-    if (distance >= 3) {
-      removeParticle(particle);
-      addParticle({ x: mapper[direction], y: particle.y - 1 });
-    }
-  }
-
-  const checkFall = {
-    toTheLeft: (particle, groundPosition) => {
-      fall(particle, groundPosition, "L");
-    },
-    toTheRight: (particle, groundPosition) => {
-      fall(particle, groundPosition, "R");
-    },
-  };
-
   const ground = determineGround({ x, y });
-  const fallDirection = Math.random();
+  const fallDirection = getFallDirection();
 
-  const fallToTheLeft = fallDirection < 0.5;
+  const checkFall = calculateFall({ x, y }, ground);
+  const fallToTheLeft = fallDirection == DIRECTIONS.left;
   if (fallToTheLeft) {
     if (ground.left) {
-      checkFall.toTheLeft({ x, y }, ground.left);
+      checkFall.toTheLeft();
     } else if (ground.right) {
-      checkFall.toTheRight({ x, y }, ground.right);
+      checkFall.toTheRight();
     }
     return;
   }
 
-  const fallToTheRight = fallDirection >= 0.5;
+  const fallToTheRight = fallDirection == DIRECTIONS.right;
   if (fallToTheRight) {
     if (ground.right) {
-      checkFall.toTheRight({ x, y }, ground.right);
+      checkFall.toTheRight();
     } else if (ground.left) {
-      checkFall.toTheLeft({ x, y }, ground.left);
+      checkFall.toTheLeft();
     }
   }
-}
-
-function removeParticle(position) {
-  entities.write(position, BLANK);
 }
 
 function determineGround({ x, y }) {
@@ -99,6 +78,32 @@ function determineGround({ x, y }) {
     groundInfo.right = findGround(rightPosition);
   }
   return groundInfo;
+}
+
+function getFallDirection() {
+  return Math.random() <= 0.5 ? DIRECTIONS.left : DIRECTIONS.right;
+}
+
+function calculateFall(particle, ground) {
+  function fall(particle, groundPosition, direction) {
+    const distance = particle.y - groundPosition.y;
+    const mapper = {
+      [DIRECTIONS.left]: particle.x - 1,
+      [DIRECTIONS.right]: particle.x + 1,
+    };
+    if (distance >= 3) {
+      removeParticle(particle);
+      addParticle({ x: mapper[direction], y: particle.y - 1 });
+    }
+  }
+  return {
+    toTheLeft: () => fall(particle, ground.left, DIRECTIONS.left),
+    toTheRight: () => fall(particle, ground.right, DIRECTIONS.right),
+  };
+}
+
+function removeParticle(position) {
+  entities.write(position, BLANK);
 }
 
 for (let index = 0; index < 200; index++) {
