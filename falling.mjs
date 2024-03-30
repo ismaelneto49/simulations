@@ -1,10 +1,10 @@
 import { entities } from "./screen.mjs";
 
 const PARTICLE_CHAR = "██";
-const BLANK = "▒▒";
+const BLANK = "  ";
 const DIRECTIONS = {
-  left: "L",
-  right: "R",
+  left: "left",
+  right: "right",
 };
 
 function spawnParticle() {
@@ -30,33 +30,13 @@ function applyGravity({ x, y }) {
   addParticle({ x, y: --y });
 }
 
-function isParticle({ x, y }) {
-  return entities.get({ x, y }) == PARTICLE_CHAR;
+function isParticle(position) {
+  return entities.get(position) == PARTICLE_CHAR;
 }
 
-function slideParticle({ x, y }) {
-  const ground = determineGround({ x, y });
-  const fallDirection = getFallDirection();
-
-  const checkFall = calculateFall({ x, y }, ground);
-  const fallToTheLeft = fallDirection == DIRECTIONS.left;
-  if (fallToTheLeft) {
-    if (ground.left) {
-      checkFall.toTheLeft();
-    } else if (ground.right) {
-      checkFall.toTheRight();
-    }
-    return;
-  }
-
-  const fallToTheRight = fallDirection == DIRECTIONS.right;
-  if (fallToTheRight) {
-    if (ground.right) {
-      checkFall.toTheRight();
-    } else if (ground.left) {
-      checkFall.toTheLeft();
-    }
-  }
+function slideParticle(particle) {
+  const ground = determineGround(particle);
+  verifySlide(particle, ground);
 }
 
 function determineGround({ x, y }) {
@@ -80,12 +60,29 @@ function determineGround({ x, y }) {
   return groundInfo;
 }
 
-function getFallDirection() {
+function verifySlide(particle, ground) {
+  function checkDirection(ground, direction, slide) {
+    const oppositeDirection = Object.keys(ground).find(
+      (key) => key != direction
+    );
+    if (ground[direction]) {
+      slide.to[direction]();
+    } else if (ground[oppositeDirection]) {
+      slide.to[oppositeDirection]();
+    }
+  }
+
+  const slideDirection = getSlideDirection();
+  const slide = calculateSlide(particle, ground);
+  checkDirection(ground, slideDirection, slide);
+}
+
+function getSlideDirection() {
   return Math.random() <= 0.5 ? DIRECTIONS.left : DIRECTIONS.right;
 }
 
-function calculateFall(particle, ground) {
-  function fall(particle, groundPosition, direction) {
+function calculateSlide(particle, ground) {
+  function slide(particle, groundPosition, direction) {
     const distance = particle.y - groundPosition.y;
     const mapper = {
       [DIRECTIONS.left]: particle.x - 1,
@@ -97,8 +94,10 @@ function calculateFall(particle, ground) {
     }
   }
   return {
-    toTheLeft: () => fall(particle, ground.left, DIRECTIONS.left),
-    toTheRight: () => fall(particle, ground.right, DIRECTIONS.right),
+    to: {
+      left: () => slide(particle, ground.left, DIRECTIONS.left),
+      right: () => slide(particle, ground.right, DIRECTIONS.right),
+    },
   };
 }
 
