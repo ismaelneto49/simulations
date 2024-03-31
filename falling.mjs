@@ -1,23 +1,31 @@
-import { entities } from "./screen.mjs";
+import { setupScreen } from "./screen.mjs";
 
 const PARTICLE_CHAR = "██";
-const BLANK = "  ";
 const DIRECTIONS = {
   left: "left",
   right: "right",
 };
 
+function configureScreen() {
+  const SCREEN_LENGTH = 63;
+  const SCREEN_HEIGHT = 30;
+  const SCREEN_FILL = "  ";
+  return setupScreen(SCREEN_LENGTH, SCREEN_HEIGHT, SCREEN_FILL);
+}
+
+const screenMetadata = configureScreen();
+
 function spawnParticle() {
   const particle = {
-    x: Math.floor(Math.random() * entities.SCREEN_LENGTH),
-    y: Math.floor(Math.random() * entities.SCREEN_HEIGHT),
+    x: Math.floor(Math.random() * screenMetadata.SCREEN_LENGTH),
+    y: Math.floor(Math.random() * screenMetadata.SCREEN_HEIGHT),
   };
   addParticle(particle);
 }
 
 function addParticle(position) {
-  entities.write(position, PARTICLE_CHAR);
-  entities.save();
+  screenMetadata.write(position, PARTICLE_CHAR);
+  screenMetadata.save();
   applyGravity(position);
 }
 
@@ -31,7 +39,7 @@ function applyGravity({ x, y }) {
 }
 
 function isParticle(position) {
-  return entities.get(position) == PARTICLE_CHAR;
+  return screenMetadata.get(position) == PARTICLE_CHAR;
 }
 
 function slideParticle(particle) {
@@ -54,7 +62,7 @@ function determineGround({ x, y }) {
   if (x > 0 && !isParticle(leftPosition)) {
     groundInfo.left = findGround(leftPosition);
   }
-  if (x < entities.SCREEN_LENGTH - 1 && !isParticle(rightPosition)) {
+  if (x < screenMetadata.SCREEN_LENGTH - 1 && !isParticle(rightPosition)) {
     groundInfo.right = findGround(rightPosition);
   }
   return groundInfo;
@@ -102,10 +110,10 @@ function calculateSlide(particle, ground) {
 }
 
 function removeParticle(position) {
-  entities.write(position, BLANK);
+  screenMetadata.write(position, screenMetadata.SCREEN_FILL);
 }
 
-for (let index = 0; index < 200; index++) {
+for (let index = 0; index < 50; index++) {
   addParticle({ x: 25, y: 30 });
 }
-entities.animate();
+screenMetadata.animate();

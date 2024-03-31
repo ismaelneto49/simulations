@@ -1,25 +1,21 @@
-const entities = {
+const metadata = {
   SCREEN: [[]],
-  SCREEN_HEIGHT: 30,
-  SCREEN_LENGTH: 63,
   BUFFER: [],
-  FILL: "  ",
   write,
   get,
   animate,
   print,
   save,
 };
-entities.SCREEN = generateScreen(
-  entities.SCREEN_LENGTH,
-  entities.SCREEN_HEIGHT,
-  entities.FILL
-);
 
-function generateScreen(length, height, fill) {
-  return Array.from({ length: length }, () =>
+function setupScreen(length, height, fill) {
+  metadata.SCREEN_LENGTH = length;
+  metadata.SCREEN_HEIGHT = height;
+  metadata.SCREEN_FILL = fill;
+  metadata.SCREEN = Array.from({ length: length }, () =>
     Array.from({ length: height }, () => null).fill(fill)
   );
+  return metadata;
 }
 
 function print(screen) {
@@ -38,16 +34,16 @@ function save() {
   function deepCopy(matrix) {
     return matrix.map((row) => [...row]);
   }
-  entities.BUFFER.push(deepCopy(entities.SCREEN));
+  metadata.BUFFER.push(deepCopy(metadata.SCREEN));
 }
 
 function animate(frequency = 5) {
   let i = 0;
   const interval = setInterval(() => {
-    if (i == entities.BUFFER.length - 1) {
+    if (i == metadata.BUFFER.length - 1) {
       stopAnimation();
     }
-    print(entities.BUFFER[i++]);
+    print(metadata.BUFFER[i++]);
   }, frequency);
 
   function stopAnimation() {
@@ -56,11 +52,11 @@ function animate(frequency = 5) {
 }
 
 function write({ x, y }, content) {
-  entities.SCREEN[x][y] = content;
+  metadata.SCREEN[x][y] = content;
 }
 
 function get({ x, y }) {
-  return entities.SCREEN[x][y];
+  return metadata.SCREEN[x][y];
 }
 
-export { entities };
+export { setupScreen };
