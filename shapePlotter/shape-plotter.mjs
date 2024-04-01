@@ -58,8 +58,29 @@ function plotWireframe() {
     const { start, end } = line;
     screenMetadata.drawLine(start, end, POINT_CHAR);
   });
+  screenMetadata.save();
 
   // CONTINUE REFACTORING FROM HERE
+
+  /*
+  function fillScreen(screen) {
+    function rotateMatrix(matrix) {
+      const numRows = matrix.length;
+      const numCols = matrix[0].length;
+  
+      for (let i = 0; i < numRows; i++) {
+        for (let j = i + 1; j < numCols; j++) {
+          const temp = matrix[i][j];
+          matrix[i][j] = matrix[j][i];
+          matrix[j][i] = temp;
+        }
+      }
+    }
+  
+    rotateMatrix(screen);
+    return screen.map((line) => line.join("")).reverse();
+  }
+  */
 
   const matrices = [];
   const bufferMatrix = fillScreen(screen);
@@ -70,7 +91,7 @@ function plotWireframe() {
     })
   );
 
-  clearScreen(screen);
+  screenMetadata.clear();
   console.log(bufferMatrix.join("\n"));
   vertices.forEach((vertex) => console.log(rotateOnY(vertex, 30)));
 }
