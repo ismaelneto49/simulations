@@ -1,4 +1,4 @@
-import { setupScreen } from "./screen.mjs";
+import { screenModes, setupScreen } from "../screen/screen.mjs";
 
 const PARTICLE_CHAR = "██";
 const DIRECTIONS = {
@@ -10,7 +10,12 @@ function configureScreen() {
   const SCREEN_LENGTH = 63;
   const SCREEN_HEIGHT = 30;
   const SCREEN_FILL = "  ";
-  return setupScreen(SCREEN_LENGTH, SCREEN_HEIGHT, SCREEN_FILL);
+  return setupScreen(
+    SCREEN_LENGTH,
+    SCREEN_HEIGHT,
+    SCREEN_FILL,
+    screenModes.QUADRANT
+  );
 }
 
 const screenMetadata = configureScreen();
@@ -113,7 +118,9 @@ function removeParticle(position) {
   screenMetadata.write(position, screenMetadata.SCREEN_FILL);
 }
 
-for (let index = 0; index < 50; index++) {
-  addParticle({ x: 25, y: 30 });
+function animate() {
+  screenMetadata.animate();
 }
-screenMetadata.animate();
+
+const fallingSand = { addParticle, spawnParticle, animate };
+export { fallingSand };

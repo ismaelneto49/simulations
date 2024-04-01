@@ -1,1 +1,1 @@
-# Falling Sand
+# This is a set of fun simulations made entirely in javascript, enjoy! :)
