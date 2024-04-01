@@ -7,8 +7,8 @@ const DIRECTIONS = {
 };
 
 function configureScreen() {
-  const SCREEN_LENGTH = 63;
-  const SCREEN_HEIGHT = 30;
+  const SCREEN_LENGTH = 64;
+  const SCREEN_HEIGHT = 45;
   const SCREEN_FILL = "  ";
   return setupScreen(
     SCREEN_LENGTH,
@@ -18,7 +18,10 @@ function configureScreen() {
   );
 }
 
-const screenMetadata = configureScreen();
+let screenMetadata;
+function start() {
+  screenMetadata = configureScreen();
+}
 
 function spawnParticle() {
   const particle = {
@@ -118,9 +121,10 @@ function removeParticle(position) {
   screenMetadata.write(position, screenMetadata.SCREEN_FILL);
 }
 
-function animate() {
-  screenMetadata.animate();
+function animate(frequency) {
+  screenMetadata.animate(frequency);
+  screenMetadata.clear();
 }
 
-const fallingSand = { addParticle, spawnParticle, animate };
+const fallingSand = { start, addParticle, spawnParticle, animate };
 export { fallingSand };

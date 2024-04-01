@@ -40,12 +40,13 @@ function save() {
 }
 
 function animate(frequency = 5) {
-  let i = 0;
   const interval = setInterval(() => {
-    if (i == metadata.BUFFER.length - 1) {
+    if (metadata.BUFFER.length == 0) {
       stopAnimation();
+      return;
     }
-    print(metadata.BUFFER[i++]);
+    print(metadata.BUFFER[0]);
+    metadata.BUFFER.shift();
   }, frequency);
 
   function stopAnimation() {
@@ -55,22 +56,22 @@ function animate(frequency = 5) {
 
 function write(coordinates, content) {
   const { x, y } = mapCoordinates(coordinates);
+  const screenX = metadata.SCREEN[x];
+  if (screenX == undefined) {
+    console.log();
+  }
   metadata.SCREEN[x][y] = content;
 }
 
 function get(coordinates) {
   const { x, y } = mapCoordinates(coordinates);
-  const screenX = metadata.SCREEN[x];
-  if (screenX == undefined) {
-    console.log();
-  }
   return metadata.SCREEN[x][y];
 }
 
 function clear() {
-  metadata.SCREEN.forEach(element => {
-    element.forEach((_, j, arr) => {
-      arr[j] = metadata.FILL;
+  metadata.SCREEN.forEach((line) => {
+    line.forEach((_, idx, line) => {
+      line[idx] = metadata.SCREEN_FILL;
     });
   });
 }
@@ -140,8 +141,8 @@ function mapToCartesian({ x, y }) {
   const xPositive_yNegative = x >= 0 && y <= 0;
   const xNegative_yPositive = x <= 0 && y >= 0;
 
-  const differenceFactorX = metadata.SCREEN_LENGTH / 2;
-  const differenceFactorY = metadata.SCREEN_HEIGHT / 2;
+  const differenceFactorX = metadata.SCREEN_HEIGHT / 2;
+  const differenceFactorY = metadata.SCREEN_LENGTH / 2;
   let realX = 0;
   let realY = 0;
   if (bothPositive || bothNegative) {
