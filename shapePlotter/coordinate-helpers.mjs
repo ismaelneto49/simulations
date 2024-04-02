@@ -48,6 +48,16 @@ function rotateOnX({ x, y, z }, degrees) {
 
 function rotateOnY({ x, y, z }, degrees) {
   const rotationMatrix = getRotationMatrix(degrees);
+
+  // multiply by rotation matrix on x and z coordinates, then add y back
+  const xRotated = rotationMatrix[0][0] * x + rotationMatrix[0][1] * z;
+  const zRotated = rotationMatrix[1][0] * x + rotationMatrix[1][1] * z;
+
+  return {
+    x: Number(xRotated.toFixed(0)),
+    y: y,
+    z: Number(zRotated.toFixed(0)),
+  };
 }
 
 function rotateOnZ({ x, y, z }, degrees) {

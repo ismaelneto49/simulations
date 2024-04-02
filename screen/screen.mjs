@@ -113,29 +113,29 @@ function drawLine({ x: x1, y: y1 }, { x: x2, y: y2 }, content) {
   }
 }
 
-function mapCoordinates(coordinates) {
+function mapCoordinates(coordinate) {
   const modeMapper = {
-    REGULAR: (c) => mapToRegular(c),
-    QUADRANT: (c) => mapToQuadrant(c),
-    CARTESIAN: (c) => mapToCartesian(c),
+    REGULAR: (c) => mapFromRegular(c),
+    QUADRANT: (c) => mapFromQuadrant(c),
+    CARTESIAN: (c) => mapFromCartesian(c),
   };
 
   const mode = metadata.SCREEN_MODE;
-  const { x, y } = modeMapper[mode](coordinates);
+  const { x, y } = modeMapper[mode](coordinate);
   return { x, y };
 }
 
-function mapToRegular(coordinates) {
-  return coordinates;
+function mapFromRegular(coordinate) {
+  return coordinate;
 }
 
-function mapToQuadrant({ x, y }) {
+function mapFromQuadrant({ x, y }) {
   const realX = metadata.SCREEN_HEIGHT - y - 1;
   const realY = x;
   return { x: realX, y: realY };
 }
 
-function mapToCartesian({ x, y }) {
+function mapFromCartesian({ x, y }) {
   const bothPositive = x >= 0 && y >= 0;
   const bothNegative = x <= 0 && y <= 0;
   const xPositive_yNegative = x >= 0 && y <= 0;

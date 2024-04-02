@@ -8,7 +8,7 @@ const DIRECTIONS = {
 
 function configureScreen() {
   const SCREEN_LENGTH = 64;
-  const SCREEN_HEIGHT = 45;
+  const SCREEN_HEIGHT = 32;
   const SCREEN_FILL = "  ";
   return setupScreen(
     SCREEN_LENGTH,

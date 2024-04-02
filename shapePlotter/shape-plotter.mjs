@@ -6,8 +6,8 @@ const POINT_CHAR = "██";
 
 function configureScreen() {
   const SCREEN_LENGTH = 64;
-  const SCREEN_HEIGHT = 45;
-  const SCREEN_FILL = "░░";
+  const SCREEN_HEIGHT = 32;
+  const SCREEN_FILL = "  ";
   return setupScreen(
     SCREEN_LENGTH,
     SCREEN_HEIGHT,
@@ -36,17 +36,25 @@ function createLines(vertices, edges, focalLength) {
 }
 
 function plotWireframe({ focalLength }) {
+  function createWireframe({ vertices, edges }, focal, rotationDegrees) {
+    const rotatedVertices = vertices.map((vertex) =>
+      rotateOnY(vertex, rotationDegrees)
+    );
+
+    const lines = createLines(rotatedVertices, edges, focal);
+    lines.forEach((line) => {
+      const { start, end } = line;
+      screenMetadata.drawLine(start, end, POINT_CHAR);
+    });
+  }
+
   const { rotateOnX, rotateOnY, rotateOnZ } = rotationFunctions;
 
-  let { vertices, edges } = shapeData;
-  const lines = createLines(vertices, edges, focalLength);
-
-  lines.forEach((line) => {
-    const { start, end } = line;
-    screenMetadata.drawLine(start, end, POINT_CHAR);
-  });
-  screenMetadata.save();
-  screenMetadata.clear();
+  for (let index = 0; index < 360; index += 30) {
+    createWireframe(shapeData, focalLength, index);
+    screenMetadata.save();
+    screenMetadata.clear();
+  }
 }
 
 function animate(frequency) {
