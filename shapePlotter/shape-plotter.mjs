@@ -35,10 +35,10 @@ function createLines(vertices, edges, focalLength) {
   return lines;
 }
 
-function plotWireframe({ focalLength }) {
-  function createWireframe({ vertices, edges }, focal, rotationDegrees) {
+function plotWireframe({ focalLength, rotationDegrees }) {
+  function createWireframe({ vertices, edges }, focal, degrees) {
     const rotatedVertices = vertices.map((vertex) =>
-      rotateOnY(vertex, rotationDegrees)
+      rotateOnY(vertex, degrees)
     );
 
     const lines = createLines(rotatedVertices, edges, focal);
@@ -50,11 +50,9 @@ function plotWireframe({ focalLength }) {
 
   const { rotateOnX, rotateOnY, rotateOnZ } = rotationFunctions;
 
-  for (let index = 0; index < 360; index += 30) {
-    createWireframe(shapeData, focalLength, index);
-    screenMetadata.save();
-    screenMetadata.clear();
-  }
+  createWireframe(shapeData, focalLength, rotationDegrees);
+  screenMetadata.save();
+  screenMetadata.clear();
 }
 
 function animate(frequency) {

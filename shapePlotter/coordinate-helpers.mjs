@@ -11,23 +11,18 @@ function projectVertex(vertex, focalLength) {
 }
 
 function getRotationMatrix(angleDegrees) {
-  const radians = {
-    0: 0,
-    30: Math.PI / 6,
-    45: Math.PI / 4,
-    90: Math.PI / 2,
-    180: Math.PI,
-    360: 2 * Math.PI,
-  };
+  function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
 
   return [
     [
-      Number(Math.cos(radians[angleDegrees]).toFixed(2)),
-      Number(-Math.sin(radians[angleDegrees]).toFixed(2)),
+      Number(Math.cos(toRadians(angleDegrees)).toFixed(2)),
+      Number(-Math.sin(toRadians(angleDegrees)).toFixed(2)),
     ],
     [
-      Number(Math.sin(radians[angleDegrees]).toFixed(2)),
-      Number(Math.cos(radians[angleDegrees]).toFixed(2)),
+      Number(Math.sin(toRadians(angleDegrees)).toFixed(2)),
+      Number(Math.cos(toRadians(angleDegrees)).toFixed(2)),
     ],
   ];
 }
