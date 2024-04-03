@@ -5,7 +5,7 @@ import shapeData from "./shape-data.json" assert { type: "json" };
 const POINT_CHAR = "██";
 
 function configureScreen() {
-  const SCREEN_LENGTH = 64;
+  const SCREEN_LENGTH = 32;
   const SCREEN_HEIGHT = 32;
   const SCREEN_FILL = "  ";
   return setupScreen(

@@ -11,7 +11,9 @@ function playFallingSand() {
 
 function playShapePlotter() {
   shapePlotter.start();
-  shapePlotter.plotWireframe({ focalLength: 35, rotationDegrees: 90 });
+  for (let index = 0; index < 360; index += 360) {
+    shapePlotter.plotWireframe({ focalLength: 35, rotationDegrees: 0 });
+  }
   shapePlotter.animate(100);
 }
 

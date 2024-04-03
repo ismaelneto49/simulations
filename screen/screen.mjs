@@ -146,11 +146,11 @@ function mapFromCartesian({ x, y }) {
   let realX = 0;
   let realY = 0;
   if (bothPositive || bothNegative) {
-    realX = differenceFactorX + x;
-    realY = differenceFactorY - y;
-  } else if (xPositive_yNegative || xNegative_yPositive) {
     realX = differenceFactorX - x;
     realY = differenceFactorY + y;
+  } else if (xPositive_yNegative || xNegative_yPositive) {
+    realX = differenceFactorX + x;
+    realY = differenceFactorY - y;
   }
   return { x: Math.trunc(realX), y: Math.trunc(realY) };
 }
