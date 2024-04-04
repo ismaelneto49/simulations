@@ -1,5 +1,5 @@
 import { fallingSand } from "./fallingSand/falling-sand.mjs";
-import { shapePlotter } from "./shapePlotter/shape-plotter.mjs";
+import { shapePlotter, rotationAxes } from "./shapePlotter/shape-plotter.mjs";
 
 function playFallingSand() {
   fallingSand.start();
@@ -11,10 +11,16 @@ function playFallingSand() {
 
 function playShapePlotter() {
   shapePlotter.start();
-  for (let index = 0; index < 360; index += 360) {
-    shapePlotter.plotWireframe({ focalLength: 35, rotationDegrees: 0 });
+  for (let index = 0; index <= 180; index += 5) {
+    shapePlotter.plotWireframe({ focalLength: 20, rotationAxis: rotationAxes.X, rotationDegrees: index });
   }
-  shapePlotter.animate(100);
+  for (let index = 0; index <= 180; index += 5) {
+    shapePlotter.plotWireframe({ focalLength: 20, rotationAxis: rotationAxes.Y, rotationDegrees: index });
+  }
+  for (let index = 0; index <= 180; index += 5) {
+    shapePlotter.plotWireframe({ focalLength: 20, rotationAxis: rotationAxes.Z, rotationDegrees: index });
+  }
+  shapePlotter.animate(25);
 }
 
 playShapePlotter();

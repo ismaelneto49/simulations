@@ -136,23 +136,12 @@ function mapFromQuadrant({ x, y }) {
 }
 
 function mapFromCartesian({ x, y }) {
-  const bothPositive = x >= 0 && y >= 0;
-  const bothNegative = x <= 0 && y <= 0;
-  const xPositive_yNegative = x >= 0 && y <= 0;
-  const xNegative_yPositive = x <= 0 && y >= 0;
+  const centerIndex = Math.floor(metadata.SCREEN_LENGTH / 2);
 
-  const differenceFactorX = metadata.SCREEN_HEIGHT / 2;
-  const differenceFactorY = metadata.SCREEN_LENGTH / 2;
-  let realX = 0;
-  let realY = 0;
-  if (bothPositive || bothNegative) {
-    realX = differenceFactorX - x;
-    realY = differenceFactorY + y;
-  } else if (xPositive_yNegative || xNegative_yPositive) {
-    realX = differenceFactorX + x;
-    realY = differenceFactorY - y;
-  }
-  return { x: Math.trunc(realX), y: Math.trunc(realY) };
+  const realX = centerIndex - y;
+  const realY = x + centerIndex;
+
+  return { x: realX, y: realY };
 }
 
 export { screenModes, setupScreen };

@@ -57,7 +57,17 @@ function rotateOnY({ x, y, z }, degrees) {
 
 function rotateOnZ({ x, y, z }, degrees) {
   const rotationMatrix = getRotationMatrix(degrees);
+
+  // multiply rotation matrix and x and y coordinates, then add z back
+  const xRotated = rotationMatrix[0][0] * x + rotationMatrix[0][1] * y;
+  const yRotated = rotationMatrix[1][0] * x + rotationMatrix[1][1] * y;
+
+  return {
+    x: Number(xRotated.toFixed(0)),
+    y: Number(yRotated.toFixed(0)),
+    z,
+  };
 }
 
-const rotationFunctions = { rotateOnX, rotateOnY, rotateOnZ };
+const rotationFunctions = { x: rotateOnX, y: rotateOnY, z: rotateOnZ };
 export { projectVertex, rotationFunctions };
