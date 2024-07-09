@@ -1,4 +1,4 @@
-import { screenModes, setupScreen } from "../screen/screen.mjs";
+import { screenModes, setupScreen } from "../utils/screen/screen.mjs";
 import { projectVertex, rotationFunctions } from "./coordinate-helpers.mjs";
 import shapeData from "./shape-data.json" assert { type: "json" };
 
@@ -44,13 +44,50 @@ function plotWireframe({ focalLength, rotationAxis, rotationDegrees }) {
     const lines = createLines(rotatedVertices, edges, focal);
     lines.forEach((line) => {
       const { start, end } = line;
-      screenMetadata.drawLine(start, end, POINT_CHAR);
+      drawLine(start, end, POINT_CHAR);
     });
   }
 
   createWireframe(shapeData, focalLength, rotationAxis, rotationDegrees);
   screenMetadata.save();
   screenMetadata.clear();
+}
+
+function drawLine({ x: x1, y: y1 }, { x: x2, y: y2 }, content) {
+  let x = x1;
+  let y = y1;
+  let deltaX = Math.abs(x2 - x1);
+  let deltaY = Math.abs(y2 - y1);
+  const s1 = Math.sign(x2 - x1);
+  const s2 = Math.sign(y2 - y1);
+  let interchange = 0;
+
+  if (deltaY > deltaX) {
+    let temp = deltaX;
+    deltaX = deltaY;
+    deltaY = temp;
+    interchange = 1;
+  }
+
+  let error = 2 * deltaY - deltaX;
+  const A = 2 * deltaY;
+  const B = 2 * (deltaY - deltaX);
+
+  for (let i = 1; i <= deltaX; i++) {
+    if (error < 0) {
+      if (interchange === 1) {
+        y += s2;
+      } else {
+        x += s1;
+      }
+      error += A;
+    } else {
+      y += s2;
+      x += s1;
+      error += B;
+    }
+    screenMetadata.write({ x, y }, content);
+  }
 }
 
 function animate(frequency) {

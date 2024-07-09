@@ -1,26 +1,37 @@
+import fs from "fs";
+
 import { fallingSand } from "./fallingSand/falling-sand.mjs";
 import { shapePlotter, rotationAxes } from "./shapePlotter/shape-plotter.mjs";
 
-function playFallingSand() {
+function playFallingSand({ particleQuantity, spawnCoordinate, refreshRate }) {
   fallingSand.start();
-  for (let index = 0; index < 50; index++) {
-    fallingSand.addParticle({ x: 25, y: 25 });
+  for (let index = 0; index < particleQuantity; index++) {
+    fallingSand.addParticle(spawnCoordinate);
   }
-  fallingSand.animate(5);
+  fallingSand.animate(refreshRate);
 }
 
-function playShapePlotter() {
+function playShapePlotter({ rotations, rotationAxis, refreshRate }) {
+  const rotationsQuantity = rotations * 360;
   shapePlotter.start();
-  for (let index = 0; index <= 180; index += 5) {
-    shapePlotter.plotWireframe({ focalLength: 20, rotationAxis: rotationAxes.X, rotationDegrees: index });
+  for (let index = 0; index <= rotationsQuantity; index += 5) {
+    shapePlotter.plotWireframe({
+      focalLength: 20,
+      rotationAxis: rotationAxes[rotationAxis],
+      rotationDegrees: index,
+    });
   }
-  for (let index = 0; index <= 180; index += 5) {
-    shapePlotter.plotWireframe({ focalLength: 20, rotationAxis: rotationAxes.Y, rotationDegrees: index });
-  }
-  for (let index = 0; index <= 180; index += 5) {
-    shapePlotter.plotWireframe({ focalLength: 20, rotationAxis: rotationAxes.Z, rotationDegrees: index });
-  }
-  shapePlotter.animate(25);
+  shapePlotter.animate(refreshRate);
 }
 
-playShapePlotter();
+(function menu() {
+  const settings = JSON.parse(fs.readFileSync("./settings.json"));
+  const simulations = {
+    fallingSand: playFallingSand,
+    shapePlotter: playShapePlotter,
+  };
+
+  const simulationId = settings.currentSimulationId;
+  const { name, ...rest } = settings[simulationId];
+  simulations[name](rest);
+})();

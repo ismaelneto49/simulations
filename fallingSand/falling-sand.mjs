@@ -1,4 +1,4 @@
-import { screenModes, setupScreen } from "../screen/screen.mjs";
+import { screenModes, setupScreen } from "../utils/screen/screen.mjs";
 
 const PARTICLE_CHAR = "██";
 const DIRECTIONS = {
@@ -7,7 +7,7 @@ const DIRECTIONS = {
 };
 
 function configureScreen() {
-  const SCREEN_LENGTH = 64;
+  const SCREEN_LENGTH = 64; 
   const SCREEN_HEIGHT = 32;
   const SCREEN_FILL = "  ";
   return setupScreen(
