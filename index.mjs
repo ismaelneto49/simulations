@@ -17,7 +17,7 @@ function playShapePlotter({ rotations, rotationAxis, refreshRate }) {
   for (let index = 0; index <= rotationsQuantity; index += 5) {
     shapePlotter.plotWireframe({
       focalLength: 20,
-      rotationAxis: rotationAxes[rotationAxis],
+      rotationAxisList: rotationAxis.map((axis) => rotationAxes[axis]),
       rotationDegrees: index,
     });
   }

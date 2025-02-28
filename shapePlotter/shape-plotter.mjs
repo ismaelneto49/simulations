@@ -35,10 +35,13 @@ function createLines(vertices, edges, focalLength) {
   return lines;
 }
 
-function plotWireframe({ focalLength, rotationAxis, rotationDegrees }) {
-  function createWireframe({ vertices, edges }, focal, axis, degrees) {
+function plotWireframe({ focalLength, rotationAxisList, rotationDegrees }) {
+  function createWireframe({ vertices, edges }, focal, axes, degrees) {
     const rotatedVertices = vertices.map((vertex) =>
-      rotationFunctions[axis](vertex, degrees)
+      axes.reduce(
+        (result, axis) => rotationFunctions[axis](result, degrees),
+        vertex
+      )
     );
 
     const lines = createLines(rotatedVertices, edges, focal);
@@ -48,7 +51,7 @@ function plotWireframe({ focalLength, rotationAxis, rotationDegrees }) {
     });
   }
 
-  createWireframe(shapeData, focalLength, rotationAxis, rotationDegrees);
+  createWireframe(shapeData, focalLength, rotationAxisList, rotationDegrees);
   screenMetadata.save();
   screenMetadata.clear();
 }

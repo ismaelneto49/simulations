@@ -2,15 +2,15 @@
   "currentSimulationId": 1,
   "0": {
     "name": "fallingSand",
-    "particleQuantity": 10,
-    "spawnCoordinate": { "x": 25, "y": 25 },
+    "particleQuantity": 1000,
+    "spawnCoordinate": { "x": 10, "y": 25 },
     "refreshRate": 10
   },
 
   "1": {
     "name": "shapePlotter",
     "rotations": 1,
-    "rotationAxis": "X",
+    "rotationAxis": ["X", "Y"],
     "refreshRate": 25
   }
 }
