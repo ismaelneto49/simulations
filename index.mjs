@@ -2,6 +2,7 @@ import fs from "fs";
 
 import { fallingSand } from "./fallingSand/falling-sand.mjs";
 import { shapePlotter, rotationAxes } from "./shapePlotter/shape-plotter.mjs";
+import { pong } from "./pong/pong.mjs";
 
 function playFallingSand({ particleQuantity, spawnCoordinate, refreshRate }) {
   fallingSand.start();
@@ -24,11 +25,17 @@ function playShapePlotter({ rotations, rotationAxis, refreshRate }) {
   shapePlotter.animate(refreshRate);
 }
 
+function playPong({ refreshRate }) {
+  pong.start();
+  pong.animate(refreshRate);
+}
+
 (function menu() {
   const settings = JSON.parse(fs.readFileSync("./settings.json"));
   const simulations = {
     fallingSand: playFallingSand,
     shapePlotter: playShapePlotter,
+    pong: playPong,
   };
 
   const simulationId = settings.currentSimulationId;
